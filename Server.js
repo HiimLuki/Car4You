@@ -19,7 +19,7 @@ app.use(session({
 }));
 
 //Name der Collection
-const DB_COLLECTION = "products";
+var DB_COLLECTION = "products";
 
 //Datenbank TingoDB
 require('fs').mkdir(__dirname + '/tingodb', (err)=>{});
@@ -109,40 +109,29 @@ app.post('/login', function(req, res){
 	var password= req.body['password'];
 	
 	console.log(`Login ${email} ${password}`);
-	
-	
-	db.collection(DB_COLLECTION).find().toArray(function(err, result) {
-		console.log(result);
-		console.log('Datensatz gefunden');
-		
-		var counter =0;
-		var angemeldet = false;
-		if(!angemeldet){
-			for(x in result){
-				if(email == result[counter][4]){
-					console.log('Email korrekt');
-					if(passwordHash.verify(password, result[counter][12])){
-						res.redirect('/');
-						console.log('Passwort korrekt');
-						angemeldet = true;
-					}
-				}
-				counter +=1;
+	//passwordHash.verify(password, result...)
+
+	db.collection(DB_COLLECTION).find({"4":email}).toArray(function(err, result){
+		var id = result[0];
+		console.log(id);
+		db.collection(DB_COLLECTION).find({"_id":id}).toArray(function(err, result){
+			console.log(result[0]);
+			console.log(passwordHash.verify(password, result[12]));
+			console.log('angemeldet');
+		});
+		/*db.collection(DB_COLLECTION).find({"_id":'2',"12":password}).toArray(function(err, result){
+			console.log(result);
+			if (result['4'] != null){
+				console.log('angemeldet');
+				res.redirect('/');
 			}
-		}
-		if(!angemeldet){
-			res.redirect('login');
-			console.log('nicht angemeldet');
-		}
+			else{
+				console.log('nicht angemeldet');
+				res.redirect('/login');
+			}
+		});*/
 	});
-
-	function on() {
-					document.getElementById("overlay").style.display = "block";
-				}
-
-	function off() {	
-					document.getElementById("overlay").style.display = "none";
-				}
+	
 });
 
 app.get('/passwort', function(req, res){
@@ -220,39 +209,32 @@ app.post('/resetyourpasswordnowforcar4you', function(req, res){
 		console.log(`PW: ${mail} ${newpassword}`);
 		
 		db.collection(DB_COLLECTION).find().toArray(function(err, result) {
-			console.log(result);
 				
-				var counter =0;
-				for(x in result){
-					if(mail == result[counter][4]){
-						result[counter][12] = newpassword;
-						console.log(result[counter][12]);
-						richtigeemail=true;
-						res.redirect('/');	
-						break;				
-					}
-					counter +=1;
+			var counter =0;
+			for(x in result){
+				if(mail == result[counter][4]){
+					result[counter][12] = newpassword;
+					console.log(result[counter][12]);
+					richtigeemail=true;
+						
+					res.redirect('/');	
+					break;				
 				}
+				
+				counter +=1;
+			}
 
-				if(richtigeemail == false){
-					console.log('Falsche emailadresse');
-					res.redirect('/resetyourpasswordnowforcar4you');
-				}
+			if(richtigeemail== true){
+				var passwort = passwordHash.generate(newpassword)
+				console.log(passwort);
+				db.collection(DB_COLLECTION).update({"4":mail},{"12": passwort}, {upsert: false});
+				console.log(result);
+			}	
 
-				if(richtigeemail == true){
-					var password = {'12': encryptedPassword};
-					var newpassword = { $set: {'12': newpassword} };
-					db.collection("products").updateOne(password, newpassword, function(err,res){
-						if (err) throw err;
-						console.log("1 Dokument überschrieben");
-						res.redirect('/');
-					});
-					/*db.collection(DB_COLLECTION).save(result, function(err, result){
-						console.log(result);
-						console.log('Datensatz gespeichert');
-					});
-					//db.DB_COLLECTION.remove({result id: 2});*/
-				}
+			if(richtigeemail == false){
+				console.log('Falsche emailadresse');
+				res.redirect('/resetyourpasswordnowforcar4you');
+			}
 		});
 	}
 	else{
