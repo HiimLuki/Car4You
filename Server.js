@@ -111,25 +111,28 @@ app.post('/login', function(req, res){
 	console.log(`Login ${email} ${password}`);
 	//passwordHash.verify(password, result...)
 
-	db.collection(DB_COLLECTION).find({"4":email}).toArray(function(err, result){
-		var id = result[0];
+	/*db.collection(DB_COLLECTION).findOne({"4":email},function(err, result){
+		console.log("alles " +result["_id"]);
+		console.log(" hier "+result[3]);
+		var id = result[3];
+		
 		console.log(id);
 		db.collection(DB_COLLECTION).find({"_id":id}).toArray(function(err, result){
-			console.log(result[0]);
+			console.log(result);
 			console.log(passwordHash.verify(password, result[12]));
 			console.log('angemeldet');
 		});
-		/*db.collection(DB_COLLECTION).find({"_id":'2',"12":password}).toArray(function(err, result){
-			console.log(result);
-			if (result['4'] != null){
-				console.log('angemeldet');
-				res.redirect('/');
-			}
-			else{
-				console.log('nicht angemeldet');
-				res.redirect('/login');
-			}
-		});*/
+	});*/
+	db.collection(DB_COLLECTION).find({"4":email}).toArray(function(err, result){
+		console.log("alles " +result[0]["_id"]);
+		var id = result[0]["_id"];
+		
+		console.log(id);
+		db.collection(DB_COLLECTION).find({"_id":id}).toArray(function(err, result){
+			console.log("passswort " + result[0][12]);
+			console.log(passwordHash.verify(password, result[0][12]));
+			//console.log('angemeldet');
+		});
 	});
 	
 });
@@ -206,7 +209,7 @@ app.post('/resetyourpasswordnowforcar4you', function(req, res){
 	
 	if(newpassword !=''){
 
-		console.log(`PW: ${mail} ${newpassword}`);
+		//console.log(`PW: ${mail} ${newpassword}`);
 		
 		db.collection(DB_COLLECTION).find().toArray(function(err, result) {
 				
@@ -214,7 +217,7 @@ app.post('/resetyourpasswordnowforcar4you', function(req, res){
 			for(x in result){
 				if(mail == result[counter][4]){
 					result[counter][12] = newpassword;
-					console.log(result[counter][12]);
+					//console.log(result[counter][12]);
 					richtigeemail=true;
 						
 					res.redirect('/');	
@@ -226,9 +229,10 @@ app.post('/resetyourpasswordnowforcar4you', function(req, res){
 
 			if(richtigeemail== true){
 				var passwort = passwordHash.generate(newpassword)
-				console.log(passwort);
-				db.collection(DB_COLLECTION).update({"4":mail},{"12": passwort}, {upsert: false});
-				console.log(result);
+				console.log("Passwort neu "+passwort);
+				db.collection(DB_COLLECTION).update({"4":mail},{"12": passwort, "4": mail}, function (err, result) {
+    				console.log(err, result);
+    			});
 			}	
 
 			if(richtigeemail == false){
