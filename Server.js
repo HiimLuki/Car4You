@@ -141,8 +141,10 @@ app.post('/login', function(req, res){
 			
 			if(passwordHash.verify(password, result[0][12])){
 				req.session.authenticated = true;
-                req.session.username = result[0][1] + " " + result[0][2];
+				req.session['user'] = result[0][1];
+                //req.session.username = result[0][1] + " " + result[0][2];
                 req.session.daten = result;
+				
 
                 console.log("session gestartet");
 
@@ -257,12 +259,16 @@ app.post('/resetyourpasswordnowforcar4you', function(req, res){
 app.get('/logout', function(req, res){
 	res.render('logout');
 	delete req.session.authenticated;
-    delete req.session.username;
+	delete req.session['user'];
     delete req.session.daten;
 });
 
 
 
 app.get('/Startseite', function(req, res){
-	res.render('index');
+	if (req.session['authenticated'] == true){
+		res.render('index', {'user': req.session['user']});
+	}
+	else{res.redirect('/');
+	}
 });
