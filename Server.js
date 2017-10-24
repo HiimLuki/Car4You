@@ -10,14 +10,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.engine('.ejs', require('ejs').__express);
 app.set('view engine', 'ejs');
 
-// Sessions initialisieren
-const session = require('express-session');
-app.use(session({ 
-	secret: 'example',
-	resave: false,
-	saveUninitialized: true
-}));
-
 //Name der Collection
 var DB_COLLECTION = "products";
 
@@ -39,6 +31,14 @@ app.listen(3000, function(){
 //Dateien Laden
 app.use(express.static('car4you'));	
 
+//Sessions setup
+const session = require('express-session');
+app.use(session({
+    secret: 'this-is-a-secret',     //necessary for encoding
+    resave: false,                  //should be set to false, except store needs it
+    saveUninitialized: false        //same reason as above.
+}));
+
 //Funktion für TingoDB update
 function update(daten){
 	db.collection(DB_COLLECTION).update({"4":daten[0][4]},{"1": daten[0][1], "2": daten[0][2], "3": daten[0][3], "4": daten[0][4], "5": daten[0][5], "6": daten[0][6], "7": daten[0][7], "8": daten[0][8], "9": daten[0][9], "10": daten[0][10], "11": daten[0][11], "12": daten[0][12]}, function (err, result) {
@@ -53,6 +53,7 @@ app.get('/registrieren', function(req, res){
 });
 
 app.post('/registrieren', function(req,res){
+
 		const vorname = req.body['Vorname'];
 		const nachname = req.body['Nachname'];
 		const telefon = req.body['Telefonnummer'];
@@ -115,23 +116,18 @@ app.post('/login', function(req, res){
 	
 	var email = req.body['username'];
 	var password= req.body['password'];
+
+
 	
 	console.log(`Loginversuch mit ${email} ${password}`);
+
 	
 	//Alternative möglichkeit zum finden von Datensätzen
 	//Find gibt 2 dimensionales Array zurück und findOne ein eindimensionales 
 	/*db.collection(DB_COLLECTION).findOne({"4":email},function(err, result){
-		console.log("gefundenes Passwort" +result[0][12]);
 		
-		if(passwordHash.verify(password, result[0][12])){
-			console.log("anmeldung erfolgreich");
-			res.redirect('/');
-		}
-
-		else{
-			console.log("anmeldung fehlgeschlagen");
-			res.redirect('/login');
-		}
+		...
+		
 	});*/
 	db.collection(DB_COLLECTION).find({"4":email}).toArray(function(err, result){
 		
@@ -141,10 +137,15 @@ app.post('/login', function(req, res){
 		}
 
 		else{
-			console.log(result);
 			console.log("gefundenes Passwort" +result[0][12]);
 			
 			if(passwordHash.verify(password, result[0][12])){
+				req.session.authenticated = true;
+                req.session.username = result[0][1] + " " + result[0][2];
+                req.session.daten = result;
+
+                console.log("session gestartet");
+
 				console.log("anmeldung erfolgreich");
 				res.redirect('/');
 			}
