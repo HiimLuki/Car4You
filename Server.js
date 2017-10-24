@@ -147,7 +147,7 @@ app.post('/login', function(req, res){
                 console.log("session gestartet");
 
 				console.log("anmeldung erfolgreich");
-				res.redirect('/');
+				res.redirect('/Startseite');
 			}
 
 			else{
@@ -256,8 +256,13 @@ app.post('/resetyourpasswordnowforcar4you', function(req, res){
 	
 app.get('/logout', function(req, res){
 	res.render('logout');
+	delete req.session.authenticated;
+    delete req.session.username;
+    delete req.session.daten;
 });
 
-app.post('/logout', function(req, res){
-	
+
+
+app.get('/Startseite', function(req, res){
+	res.render('index');
 });
