@@ -39,6 +39,14 @@ app.listen(3000, function(){
 //Dateien Laden
 app.use(express.static('car4you'));	
 
+//Funktion für TingoDB update
+function update(daten){
+	db.collection(DB_COLLECTION).update({"4":daten[0][4]},{"1": daten[0][1], "2": daten[0][2], "3": daten[0][3], "4": daten[0][4], "5": daten[0][5], "6": daten[0][6], "7": daten[0][7], "8": daten[0][8], "9": daten[0][9], "10": daten[0][10], "11": daten[0][11], "12": daten[0][12]}, function (err, result) {
+    	console.log(err, result);
+    });
+ 	console.log("Geänderter Datensatz hochgeladen");
+}
+
 //Registrieren
 app.get('/registrieren', function(req, res){
 	res.render('registrieren');
@@ -59,7 +67,7 @@ app.post('/registrieren', function(req,res){
 		const password = req.body['Passwort'];
 		const encryptedPassword = passwordHash.generate(password);
 		
-		console.log(`Registriert ${vorname} ${nachname}`);
+		console.log(`Registriert als ${vorname} ${nachname}`);
 		
 		//Beispieldatensatz, der gespeichert wird
 		var document = {	'1': vorname,
@@ -81,7 +89,7 @@ app.post('/registrieren', function(req,res){
 		for(x in document){
 			if(document[count] == ""){
 				fehler = true;
-				console.log("error :)");
+				console.log("error: ein feld nicht ausgefüllt:)");
 				res.redirect('registrieren');
 				break;
 			}
@@ -92,7 +100,7 @@ app.post('/registrieren', function(req,res){
 			// Datensatz in Collection speichern
 			db.collection(DB_COLLECTION).save(document, function(err, result){
 				console.log(result);
-				console.log('Datensatz gespeichert');
+				console.log('Datensatz gespeichert, Registrierung war erfolgreich');
 				res.redirect('/');
 			});
 		}
@@ -108,31 +116,44 @@ app.post('/login', function(req, res){
 	var email = req.body['username'];
 	var password= req.body['password'];
 	
-	console.log(`Login ${email} ${password}`);
-	//passwordHash.verify(password, result...)
-
+	console.log(`Loginversuch mit ${email} ${password}`);
+	
+	//Alternative möglichkeit zum finden von Datensätzen
+	//Find gibt 2 dimensionales Array zurück und findOne ein eindimensionales 
 	/*db.collection(DB_COLLECTION).findOne({"4":email},function(err, result){
-		console.log("alles " +result["_id"]);
-		console.log(" hier "+result[3]);
-		var id = result[3];
+		console.log("gefundenes Passwort" +result[0][12]);
 		
-		console.log(id);
-		db.collection(DB_COLLECTION).find({"_id":id}).toArray(function(err, result){
-			console.log(result);
-			console.log(passwordHash.verify(password, result[12]));
-			console.log('angemeldet');
-		});
+		if(passwordHash.verify(password, result[0][12])){
+			console.log("anmeldung erfolgreich");
+			res.redirect('/');
+		}
+
+		else{
+			console.log("anmeldung fehlgeschlagen");
+			res.redirect('/login');
+		}
 	});*/
 	db.collection(DB_COLLECTION).find({"4":email}).toArray(function(err, result){
-		console.log("alles " +result[0]["_id"]);
-		var id = result[0]["_id"];
 		
-		console.log(id);
-		db.collection(DB_COLLECTION).find({"_id":id}).toArray(function(err, result){
-			console.log("passswort " + result[0][12]);
-			console.log(passwordHash.verify(password, result[0][12]));
-			//console.log('angemeldet');
-		});
+		if(err){
+			console.log("anmeldung nicht möglich");
+			res.redirect('/login');
+		}
+
+		else{
+			console.log(result);
+			console.log("gefundenes Passwort" +result[0][12]);
+			
+			if(passwordHash.verify(password, result[0][12])){
+				console.log("anmeldung erfolgreich");
+				res.redirect('/');
+			}
+
+			else{
+				console.log("anmeldung fehlgeschlagen");
+				res.redirect('/login');
+			}
+		}
 	});
 	
 });
@@ -150,7 +171,7 @@ app.post('/passwort', function(req, res){
 	const nodemailer = require('nodemailer');
 
     // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
+    var transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 465,
         secure: true, // true for 465, false for other ports
@@ -168,7 +189,7 @@ app.post('/passwort', function(req, res){
 			if(email == result[counter][4]){
 				richtigemail= true;
 			    // setup email data with unicode symbols
-			    let mailOptions = {
+			    var mailOptions = {
 			        from: '"Car4You" <carforhaw@gmail.com>', // sender address
 			        to: (email), // list of receivers
 			        subject: 'Passwort vergessen ✔', // Subject line
@@ -209,41 +230,25 @@ app.post('/resetyourpasswordnowforcar4you', function(req, res){
 	
 	if(newpassword !=''){
 
-		//console.log(`PW: ${mail} ${newpassword}`);
+		db.collection(DB_COLLECTION).find({"4":mail}).toArray(function(err, result){		
 		
-		db.collection(DB_COLLECTION).find().toArray(function(err, result) {
-				
-			var counter =0;
-			for(x in result){
-				if(mail == result[counter][4]){
-					result[counter][12] = newpassword;
-					//console.log(result[counter][12]);
-					richtigeemail=true;
-						
-					res.redirect('/');	
-					break;				
-				}
-				
-				counter +=1;
-			}
-
-			if(richtigeemail== true){
-				var passwort = passwordHash.generate(newpassword)
-				console.log("Passwort neu "+passwort);
-				db.collection(DB_COLLECTION).update({"4":mail},{"12": passwort, "4": mail}, function (err, result) {
-    				console.log(err, result);
-    			});
-			}	
-
-			if(richtigeemail == false){
-				console.log('Falsche emailadresse');
+			if(err){
+				console.log(err);
 				res.redirect('/resetyourpasswordnowforcar4you');
 			}
+
+			else{
+				console.log('Passwort zurücksetzen gefundene daten', result);
+
+				var passwort = passwordHash.generate(newpassword);
+				result[0][12]= passwort;
+				console.log('geänderte daten', result);
+				console.log("Passwort neu "+result[0][12]);
+    			update(result);
+    			res.redirect('/');
+
+			}
 		});
-	}
-	else{
-		console.log('sie haben kein Passwort eingegeben');
-		res.redirect('/resetyourpasswordnowforcar4you');
 	}
 });
 	
