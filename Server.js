@@ -272,3 +272,11 @@ app.get('/Startseite', function(req, res){
 	else{res.redirect('/');
 	}
 });
+
+app.get('/MyMap', function(req, res){
+	if (req.session['authenticated'] == true){
+		res.render('Maps', {'user': req.session['user']});
+	}
+	else{res.redirect('/');
+	}
+});
