@@ -280,3 +280,7 @@ app.get('/MyMap', function(req, res){
 	else{res.redirect('/');
 	}
 });
+
+app.get('/Kontakt', function(req,res){
+	res.render('kontakt');
+});
