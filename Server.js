@@ -284,3 +284,39 @@ app.get('/MyMap', function(req, res){
 app.get('/Kontakt', function(req,res){
 	res.render('kontakt');
 });
+
+app.post('/Kontakt', function(req,res){
+	var email = req.body['E-Mail'];
+	var name = req.body['Name'];
+	var text = req.body['Text'];
+	
+	'use strict';
+	const nodemailer = require('nodemailer');
+
+    // create reusable transporter object using the default SMTP transport
+    var transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true, // true for 465, false for other ports
+        auth: {
+            user: 'carforhaw@gmail.com',
+            pass: 'zuckerwatte' 
+        }
+    });
+
+    // setup email data with unicode symbols
+    let mailOptions = {
+        from: 'name <carforhaw@gmail.com>', // sender address
+        to: 'carforhaw@gmail.com', // list of receivers
+        subject: 'Kontaktanfrage', // Subject line
+        text: 'email + text', // plain text body
+        html: '<b>text</b>' // html body
+    };
+
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error);
+        }
+    });	
+});
