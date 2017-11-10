@@ -135,12 +135,10 @@ iphonetext {
   margin: 15px;
   vertical-align: middle;
  }
-
+ 
  /*index service*/
 .container4{
   text-align: center;
-  
-
 }
  
  .iphoneleft{
@@ -151,6 +149,71 @@ iphonetext {
   margin: 15px;
   vertical-align: middle;
  }
+ 
+ /*Impressum*/
+ .impressum{
+  display: block;
+  max-width: 700px;
+  text-align: left;
+  padding: 30px;
+  margin: 15px;
+  vertical-align: middle;
+ }
+ .text{
+	 text-align: left;
+	 font-size: 1em;
+ }
+ h4 {
+	text-align: center;
+	font-size: 35px;
+	color: #0360A3; 
+}
+ h3{
+	font-size: 20px;
+	font-weight: normal;
+	text-decoration: underline;
+	margin-top: -50px;
+	/*margin-left: 90px;
+	margin-right: 90px;*/
+}
+
+/*Map IPA*/
+ .map{
+	display: inline-block;
+	margin-left:780px;	
+	padding: 68.3px; 
+ }
+ 
+/*Unsere Autos*/
+@keyframes slidy {
+	0% { left: 0%; }
+	20% { left: 0%; }
+	25% { left: -100%; }
+	45% { left: -100%; }
+	50% { left: -200%; }
+	70% { left: -200%; }
+	75% { left: -300%; }
+	95% { left: -300%; }
+	100% { left: -400%; }
+} 
+div#slider{ 
+	overflow: hidden; 
+}
+div#slider figure img{ 
+	width: 20%; float: left; 
+}
+div#slider figure { 
+	position: relative;
+	width: 500%;
+	margin: 0;
+	left: 0;
+	text-align: left;
+	font-size: 0;
+	animation: 40s slidy infinite; 
+}
+.abstandtesla{
+	margin-top: 50px;
+}
  
 /*footer*/
 
