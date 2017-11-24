@@ -57,16 +57,6 @@ body {
 	transition: all 0.50s;
 }
 
-#overlay{
-	margin-top: -300px;
-	margin-left: 100px;
-	font-size: 45px;
-	z-index: 1;
-	position: absolute;
-	width: 40%;
-	color: white;
-	font-weight: bold;
-}
 h1 {
 	text-align: center;
 	font-size: 30px;
@@ -212,7 +202,59 @@ div#slider figure {
 	animation: 40s slidy infinite; 
 }
 .abstandtesla{
-	margin-top: 50px;
+	margin-top: 30px;
+}
+
+/* Deine Städte */
+
+.parallax-one,
+.parallax-two,
+.parallax-three {
+  width: 100%;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-position: 70%;
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  opacity: 0.80;
+}
+.parallax-one{
+	background-image: url('http://www.hanseknipser.de/wp-content/uploads/2013/02/Waltershof-Panorama-SW-3.jpg');
+}
+.parallax-two{
+	background-image: url('https://siswords.files.wordpress.com/2013/10/reichstag-sw.jpg');
+}
+.parallax-three{
+	background-image: url('https://www.foto-burk.de/wp-content/uploads/DSC5569-143.jpg');
+}
+.images{
+	margin-left: 150px;
+	margin-top: -100px;
+}
+.dark {
+  background-color: #1E415C;
+  color: #fff;
+}
+.text{
+	text-align: left;
+	margin-left: 0px;
+	margin-right: 400px;
+}
+
+/* Button CSS */
+.login{
+	height: 45px;
+	width:180px;
+	padding: 15px 30px;
+	border:none;
+	color: #fff;
+	background-color: #1E415C;
+	margin-top: 20px;
+	margin-bottom: -20px;
 }
  
 /*footer*/
