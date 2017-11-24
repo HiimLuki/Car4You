@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Login</title>
+	<link rel="stylesheet" type="text/css" href="login.css"></link>
+</head>
+<body>
+<div id="maindiv"> 
+			<div id="navdiv">
+				<ul>
+				<logo><a href='/Startseite'><img src="img/logohd.png"/></a></logo>
+					<drop><a href="#"><img src="img/dropdown.png"/></a></drop>
+					<log><a href='/logout'><img src="img/logout.png"/></a></log>
+					<!--<log><a href="login"><img src="img/login.png"/></a></log>-->
+					<!--<log-m><a href="login"><img src="img/loginmobile.png"/></a></log-m>-->
+					<li><a href="user"><%= user%></a></li>
+					<li><a href="/MyMap">Maps</a></li>
+					<li><a href="/Kontakt">Kontakt</a></li>
+					<li><a href="#">Tipps</a></li>
+					<li><a href="#">Deine Städte</a></li>
+					<li><a href="#">Unsere Autos</a></li>
+				</ul>
+			</div>	
+		</div>
+	<div style="background-color:white; width:  750px; height: 400px; margin-left: 400px; margin-top: 100px;">
+		<div align = "left" style="font-size:50px;">
+			<%= user%>
+			<%= nach%>
+			<%= Telefon%>
+			<%= Email%>
+			<%= PLZ%>
+			<%= Ort%>
+			<%= Straße%>
+			<%= Hausnummer%>
+			<%= Tag%> <%= Monat%> <%= Jahr%>
+				
+		</div>
+	</div>
+	<div id="footer2"> 
+			<div id="foot">
+				<ul>
+					<li><a href="impressum.html">Impressum</a></li>
+				</ul>
+			</div>
+			</div>	
+</body>
+</html>
