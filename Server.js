@@ -24,8 +24,8 @@ const passwordHash = require('password-hash');
 
 // Webserver starten
 // Aufruf im Browser: http://localhost:3000
-app.listen(8080, function(){
-	console.log("listening on 8080");
+app.listen(3000, function(){
+	console.log("listening on 3000");
 });						
 
 //Dateien Laden
@@ -46,6 +46,7 @@ function update(daten){
     });
  	console.log("Geänderter Datensatz hochgeladen");
 }
+
 
 //Registrieren
 app.get('/registrieren', function(req, res){
@@ -142,7 +143,16 @@ app.post('/login', function(req, res){
 			if(passwordHash.verify(password, result[0][12])){
 				req.session.authenticated = true;
 				req.session['user'] = result[0][1];
-                //req.session.username = result[0][1] + " " + result[0][2];
+				req.session['nach'] = result[0][2];
+				req.session['Telefon'] = result[0][3];
+				req.session['Email'] = result[0][4];
+				req.session['PLZ'] = result[0][5];
+				req.session['Ort'] = result[0][6];
+				req.session['Straße'] = result[0][7];
+				req.session['Hausnummer'] = result[0][8];
+				req.session['Tag'] = result[0][9];
+				req.session['Monat'] = result[0][10];
+				req.session['Jahr'] = result[0][11];
                 req.session.daten = result;
 				
 
@@ -161,6 +171,7 @@ app.post('/login', function(req, res){
 	
 });
 
+//Passwort vergessen
 app.get('/passwort', function(req, res){
 	res.render('passwort');
 });
@@ -221,6 +232,7 @@ app.post('/passwort', function(req, res){
 	});
 });
 
+//Passwort zurücksetzen
 app.get('/resetyourpasswordnowforcar4you', function(req, res){
 	res.render('reset');
 });
@@ -255,7 +267,7 @@ app.post('/resetyourpasswordnowforcar4you', function(req, res){
 	}
 });
 	
-	
+//Logout Seite	
 app.get('/logout', function(req, res){
 	res.render('logout');
 	delete req.session.authenticated;
@@ -264,7 +276,7 @@ app.get('/logout', function(req, res){
 });
 
 
-
+//eingeloggte Startseite
 app.get('/Startseite', function(req, res){
 	if (req.session['authenticated'] == true){
 		res.render('index', {'user': req.session['user']});
@@ -273,6 +285,7 @@ app.get('/Startseite', function(req, res){
 	}
 });
 
+//Map API
 app.get('/MyMap', function(req, res){
 	if (req.session['authenticated'] == true){
 		res.render('Maps', {'user': req.session['user']});
@@ -281,6 +294,7 @@ app.get('/MyMap', function(req, res){
 	}
 });
 
+//Kontakt Seite
 app.get('/Kontakt', function(req,res){
 	res.render('kontakt');
 });
@@ -289,34 +303,44 @@ app.post('/Kontakt', function(req,res){
 	var email = req.body['E-Mail'];
 	var name = req.body['Name'];
 	var text = req.body['Text'];
+});
+
+//Benutzerverwaltung
+app.get('/User', function(req, res){
 	
-	'use strict';
-	const nodemailer = require('nodemailer');
-
-    // create reusable transporter object using the default SMTP transport
-    var transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true, // true for 465, false for other ports
-        auth: {
-            user: 'carforhaw@gmail.com',
-            pass: 'zuckerwatte' 
-        }
-    });
-
-    // setup email data with unicode symbols
-    let mailOptions = {
-        from: 'name <carforhaw@gmail.com>', // sender address
-        to: 'carforhaw@gmail.com', // list of receivers
-        subject: 'Kontaktanfrage', // Subject line
-        text: 'email + text', // plain text body
-        html: '<b>text</b>' // html body
-    };
-
-    // send mail with defined transport object
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return console.log(error);
-        }
-    });	
+	if (req.session['authenticated'] == true){
+		res.render('user', {'user': req.session['user']});
+			/*{'nach': req.session['nach']}
+			{'Telefon': req.session['Telefon']}
+			{'Email': req.session['Email']}
+			{'PLZ': req.session['PLZ']}
+			{'Ort': req.session['Ort']})
+			{'Straße': req.session['Straße']}
+			{'Hausnummer': req.session['Hausnummer']}
+			{'Tag': req.session['Tag']}
+			{'Monat': req.session['Monat']}
+			{'Jahr': req.session['Jahr']});*/
+		/*('user', {'nach': req.session['nach']})
+		('user', {'Telefon': req.session['Telefon']})
+		('user', {'Email': req.session['Email']})
+		('user', {'PLZ': req.session['PLZ']})
+		('user', {'Ort': req.session['Ort']})
+		('user', {'Straße': req.session['Straße']})
+		('user', {'Hausnummer': req.session['Hausnummer']})
+		('user', {'Tag': req.session['Tag']})
+		('user', {'Monat': req.session['Monat']})
+		('user', {'Jahr': req.session['Jahr']});*/
+			res.render('user', {'nach': req.session['nach']});
+			res.render('user', {'Telefon': req.session['Telefon']});
+			res.render('user', {'Email': req.session['Email']});
+			res.render('user', {'PLZ': req.session['PLZ']});
+			res.render('user', {'Ort': req.session['Ort']});
+			res.render('user', {'Straße': req.session['Straße']});
+			res.render('user', {'Hausnummer': req.session['Hausnummer']});
+			res.render('user', {'Tag': req.session['Tag']});
+			res.render('user', {'Monat': req.session['Monat']});
+			res.render('user', {'Jahr': req.session['Jahr']});
+	}
+	else{res.redirect('/');
+	}
 });
