@@ -110,7 +110,7 @@ app.post('/registrieren', function(req,res){
 			db.collection(DB_COLLECTION).save(document, function(err, result){
 				console.log(result);
 				console.log('Datensatz gespeichert, Registrierung war erfolgreich');
-				res.redirect('/');
+				res.redirect('login');
 			});
 		}
 });
@@ -385,5 +385,5 @@ app.post('/User', function(req, res){
 	}
 
 	update(req.session.daten);
-	res.redirect('/Startseite');
+	res.redirect('/user');
 });
