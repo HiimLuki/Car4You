@@ -2,6 +2,8 @@
 const express = require('express');
 const app = express();
 
+
+
 // body-parser initialisieren
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
@@ -24,7 +26,7 @@ const passwordHash = require('password-hash');
 
 // Webserver starten
 // Aufruf im Browser: http://localhost:3000
-app.listen(3000, function(){
+app.listen(8080, function(){
 	console.log("listening on 3000");
 });						
 
@@ -45,14 +47,13 @@ app.use(session({
 function update(daten){
 	db.collection(DB_COLLECTION).update({"4":daten[0][4]},{"1": daten[0][1], "2": daten[0][2], "3": daten[0][3], "4": daten[0][4], "5": daten[0][5], "6": daten[0][6], "7": daten[0][7], "8": daten[0][8], "9": daten[0][9], "10": daten[0][10], "11": daten[0][11], "12": daten[0][12]}, function (err, result) {
     	console.log(err, result);
-    	if(err){
-    		console.log(err);
-    	}
-    	else{
-    		console.log("Geänderter Datensatz hochgeladen");
-    	}
     });
+ 	console.log("Geänderter Datensatz hochgeladen");
 }
+
+app.get('/', function(req, res){
+	res.render('index');
+	});
 
 //Registrieren
 app.get('/registrieren', function(req, res){
@@ -303,6 +304,33 @@ app.post('/Kontakt', function(req,res){
 	var text = req.body['Text'];
 });
 
+//Autos logged in
+app.get('/Autos', function(req, res){
+	if (req.session['authenticated'] == true){
+		res.render('autoslog', {'user': req.session['user']});
+	}
+	else{res.redirect('/');
+	}
+});
+
+//Städte logged in
+app.get('/Staedte', function(req, res){
+	if (req.session['authenticated'] == true){
+		res.render('stadtlog', {'user': req.session['user']});
+	}
+	else{res.redirect('/');
+	}
+});
+
+//Kontakt logged in
+app.get('/Kontaktlog', function(req, res){
+	if (req.session['authenticated'] == true){
+		res.render('kontaktlog', {'user': req.session['user']});
+	}
+	else{res.redirect('/');
+	}
+});
+
 //Benutzerverwaltung
 app.get('/User', function(req, res){
 
@@ -358,7 +386,4 @@ app.post('/User', function(req, res){
 
 	update(req.session.daten);
 	res.redirect('/Startseite');
-
-
 });
-
