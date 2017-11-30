@@ -1,5 +1,5 @@
 body {
-	background-image: url("img/login/login1.png");
+	background: url("img/login/login1.png") no-repeat center center fixed;
 	background-size: cover;
 	font-family: calibri;
 	margin: 0px;
@@ -26,6 +26,7 @@ input{
 	border: none;
 	border-radius: 10px;
 }
+
 .text{
 	font-size: 18px;
 	margin-top: 10px;
@@ -146,10 +147,7 @@ htitel{
 	width: 100%;
 	background-size: cover;
 }
-#foot{
-}
 #foot ul{
-	position:fixed;
 	width: 100%;
 	height: 50px;
 	bottom: 0;
@@ -157,6 +155,7 @@ htitel{
 	background: rgba(38, 38, 38, 0.5);
 	line-height: 50px;
 	text-align: center;
+	position: absolute;
 }
 #foot ul a{
 	text-decoration: none;
