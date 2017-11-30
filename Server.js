@@ -209,7 +209,7 @@ app.post('/passwort', function(req, res){
 			        //text: 'Haben sie ihr Passwort vergessen? Klicken sie auf den Link um ihr Passwort zu ändern! http://localhost:3000/resetyourpasswordnowforcar4you', // plain text body
 			        html: '<p><b>Haben sie ihr Passwort vergessen?</b></p>' +
 						  '<p>Klicken sie auf den Link um ihr Passwort zu ändern!</p>' +
-						  '<p>http://localhost:3000/resetyourpasswordnowforcar4you</p>' // html body
+						  '<p>http://localhost:8080/resetyourpasswordnowforcar4you</p>' // html body
 			    };
 
 			    // send mail with defined transport object
@@ -218,7 +218,7 @@ app.post('/passwort', function(req, res){
 			            return console.log(error);
 			        }
 			        console.log('Message sent: %s', info.messageId);
-					res.redirect('/');
+					res.redirect('login');
 			    });
 			    break;
 			}
@@ -259,7 +259,7 @@ app.post('/resetyourpasswordnowforcar4you', function(req, res){
 				console.log('geänderte daten', result);
 				console.log("Passwort neu "+result[0][12]);
     			update(result);
-    			res.redirect('/');
+    			res.redirect('login');
 
 			}
 		});
