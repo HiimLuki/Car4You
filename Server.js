@@ -28,6 +28,8 @@ app.listen(3000, function(){
 	console.log("listening on 3000");
 });						
 
+
+
 //Dateien Laden
 app.use(express.static('car4you'));	
 
@@ -43,10 +45,14 @@ app.use(session({
 function update(daten){
 	db.collection(DB_COLLECTION).update({"4":daten[0][4]},{"1": daten[0][1], "2": daten[0][2], "3": daten[0][3], "4": daten[0][4], "5": daten[0][5], "6": daten[0][6], "7": daten[0][7], "8": daten[0][8], "9": daten[0][9], "10": daten[0][10], "11": daten[0][11], "12": daten[0][12]}, function (err, result) {
     	console.log(err, result);
+    	if(err){
+    		console.log(err);
+    	}
+    	else{
+    		console.log("Geänderter Datensatz hochgeladen");
+    	}
     });
- 	console.log("Geänderter Datensatz hochgeladen");
 }
-
 
 //Registrieren
 app.get('/registrieren', function(req, res){
@@ -143,21 +149,13 @@ app.post('/login', function(req, res){
 			if(passwordHash.verify(password, result[0][12])){
 				req.session.authenticated = true;
 				req.session['user'] = result[0][1];
-				req.session['nach'] = result[0][2];
-				req.session['Telefon'] = result[0][3];
-				req.session['Email'] = result[0][4];
-				req.session['PLZ'] = result[0][5];
-				req.session['Ort'] = result[0][6];
-				req.session['Straße'] = result[0][7];
-				req.session['Hausnummer'] = result[0][8];
-				req.session['Tag'] = result[0][9];
-				req.session['Monat'] = result[0][10];
-				req.session['Jahr'] = result[0][11];
                 req.session.daten = result;
 				
 
                 console.log("session gestartet");
-
+				
+				console.log(req.session.daten);
+				
 				console.log("anmeldung erfolgreich");
 				res.redirect('/Startseite');
 			}
@@ -307,40 +305,60 @@ app.post('/Kontakt', function(req,res){
 
 //Benutzerverwaltung
 app.get('/User', function(req, res){
-	
+
 	if (req.session['authenticated'] == true){
-		res.render('user', {'user': req.session['user']});
-			/*{'nach': req.session['nach']}
-			{'Telefon': req.session['Telefon']}
-			{'Email': req.session['Email']}
-			{'PLZ': req.session['PLZ']}
-			{'Ort': req.session['Ort']})
-			{'Straße': req.session['Straße']}
-			{'Hausnummer': req.session['Hausnummer']}
-			{'Tag': req.session['Tag']}
-			{'Monat': req.session['Monat']}
-			{'Jahr': req.session['Jahr']});*/
-		/*('user', {'nach': req.session['nach']})
-		('user', {'Telefon': req.session['Telefon']})
-		('user', {'Email': req.session['Email']})
-		('user', {'PLZ': req.session['PLZ']})
-		('user', {'Ort': req.session['Ort']})
-		('user', {'Straße': req.session['Straße']})
-		('user', {'Hausnummer': req.session['Hausnummer']})
-		('user', {'Tag': req.session['Tag']})
-		('user', {'Monat': req.session['Monat']})
-		('user', {'Jahr': req.session['Jahr']});*/
-			res.render('user', {'nach': req.session['nach']});
-			res.render('user', {'Telefon': req.session['Telefon']});
-			res.render('user', {'Email': req.session['Email']});
-			res.render('user', {'PLZ': req.session['PLZ']});
-			res.render('user', {'Ort': req.session['Ort']});
-			res.render('user', {'Straße': req.session['Straße']});
-			res.render('user', {'Hausnummer': req.session['Hausnummer']});
-			res.render('user', {'Tag': req.session['Tag']});
-			res.render('user', {'Monat': req.session['Monat']});
-			res.render('user', {'Jahr': req.session['Jahr']});
+		
+		res.render('user', {'sessionDaten': req.session.daten[0]});
+		
+		
 	}
 	else{res.redirect('/');
 	}
 });
+
+app.post('/User', function(req, res){
+	var telefon = req.body['telefon'];
+	var plz = req.body['plz'];
+	var ort = req.body['ort'];
+	var straße = req.body['straße'];
+	var hausnummer = req.body['hausnummer'];
+	var passwort = req.body['passwort'];  
+
+	console.log(telefon + plz + ort + straße + hausnummer + passwort);	
+
+	if (telefon != ""){
+		req.session.daten[0][3] = telefon;
+		console.log('Neue Telefonnummer' + req.session.daten[0][3]);
+	}
+
+	if (plz != ""){
+		req.session.daten[0][5] = plz;
+		console.log('Neue plz' + req.session.daten[0][5]);
+	}
+
+	if (ort != ""){
+		req.session.daten[0][6] = ort;
+		console.log('Neue ort' + req.session.daten[0][6]);
+	}
+
+	if (straße != ""){
+		req.session.daten[0][7] = straße;
+		console.log('Neue straße' + req.session.daten[0][7]);
+	}
+
+	if (hausnummer != ""){
+		req.session.daten[0][8] = hausnummer;
+		console.log('Neue hausnummer' + req.session.daten[0][8]);
+	}
+
+	if (passwort != ""){
+		req.session.daten[0][12] = passwordHash.generate(passwort);
+		console.log('Neue Passwort' + req.session.daten[0][12]);
+	}
+
+	update(req.session.daten);
+	res.redirect('/Startseite');
+
+
+});
+

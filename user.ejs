@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Login</title>
+	<link rel="stylesheet" type="text/css" href="login.css"></link>
+</head>
+<body>
+<div id="maindiv"> 
+			<div id="navdiv">
+				<ul>
+				<logo><a href='/Startseite'><img src="img/logohd.png"/></a></logo>
+					<drop><a href="#"><img src="img/dropdown.png"/></a></drop>
+					<log><a href='/logout'><img src="img/logout.png"/></a></log>
+					<!--<log><a href="login"><img src="img/login.png"/></a></log>-->
+					<!--<log-m><a href="login"><img src="img/loginmobile.png"/></a></log-m>-->
+					<li><a href="user"></a><%= sessionDaten[1]%></li>
+					<li><a href="/MyMap">Maps</a></li>
+					<li><a href="/Kontakt">Kontakt</a></li>
+					<li><a href="#">Tipps</a></li>
+					<li><a href="#">Deine Städte</a></li>
+					<li><a href="#">Unsere Autos</a></li>
+				</ul>
+			</div>	
+		</div>
+	<form action ="User" method="post">
+		<div style="background-color:grey; width:  750px; height: 750px; margin-left: 400px; margin-top: 100px;">
+			<div align = "left" style="font-size:25px;">
+				
+				Name: <%= sessionDaten[1]%> <%= sessionDaten[2]%><br><br>
+
+				Telefon: <%= sessionDaten[3]%><br>
+				<div class="form-input">
+					<input type="text" name="telefon"
+					placeholder="Telefon" required>
+				</div>
+
+				Mail: <%= sessionDaten[4]%><br><br>
+
+				Postleitzahl: <%= sessionDaten[5]%> <%= sessionDaten[6]%><br>
+				<div class="form-input">
+					<input type="text" name="plz"
+					placeholder="Plz" required>
+				</div>
+				<div class="form-input">
+					<input type="text" name="ort"
+					placeholder="Ort" required>
+				</div>
+
+				Adresse: <%= sessionDaten[7]%> <%= sessionDaten[8]%><br>
+				<div class="form-input">
+					<input type="text" name="straße"
+					placeholder="Straße" required>
+				</div>
+				<div class="form-input">
+					<input type="text" name="hausnummer"
+					placeholder="hausnummer" required>
+				</div>
+
+				Geburtsdatum: <%= sessionDaten[9]%> <%= sessionDaten[10]%> <%= sessionDaten[11]%><br><br>
+
+				Passwort ändern:
+				<div class="form-input">
+					<input type="password" name="passwort"
+					placeholder="Passwort" required>
+				</div>
+				
+				<input type="submit" name="submit"
+					value="Daten ändern" class="login">
+			</div>
+		</div>
+	</form>
+	<div id="footer2"> 
+			<div id="foot">
+				<ul>
+					<li><a href="impressum.html">Impressum</a></li>
+				</ul>
+			</div>
+			</div>	
+</body>
+</html>
