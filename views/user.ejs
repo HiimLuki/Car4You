@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel='icon' type='image/png' href='/favicon-16.png' />
 	<meta charset="utf-8">
 	<title>Login</title>
 	<link rel="stylesheet" type="text/css" href="login.css"></link>
+	<meta name="viewport" content=" initial-scale=0.8">
 </head>
 <body>
 <div id="maindiv"> 
@@ -12,6 +14,7 @@
 				<logo><a href='/Startseite'><img src="img/logohd.png"/></a></logo>
 					<drop><a href="#"><img src="img/dropdown.png"/></a></drop>
 					<log><a href='/logout'><img src="img/logout.png"/></a></log>
+					<log-m><a href="/logout"><img src="img/logoutmobile.png"/></a></log-m>
 					<!--<log><a href="login"><img src="img/login.png"/></a></log>-->
 					<!--<log-m><a href="login"><img src="img/loginmobile.png"/></a></log-m>-->
 					<li><a href="user"><%= sessionDaten[1]%></a></li>
@@ -70,12 +73,11 @@
 			</div>
 		</div>
 	</form>
-	<div id="footer2"> 
-			<div id="foot">
+	<div id="foot">
 				<ul>
-					<li><a href="impressum.html">Impressum</a></li>
-				</ul>
+				<lin>Copyright © 2017 car4you</lin>
+					<a href="impressum.html">Impressum</a>
+					</ul>		
 			</div>
-			</div>	
 </body>
 </html>
